@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>농가·소상공인 10초 릴스 & 30일 컨텐츠 캘린더 기획 챗봇</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-emerald-800 to-teal-900 text-white rounded-3xl p-6 md:p-8 shadow-xl mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span class="bg-emerald-500/30 text-emerald-300 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Ver 4.2 완벽 수정 에디션</span>
+                    <h1 class="text-2xl md:text-3xl font-extrabold mt-2 tracking-tight">🌾 농가·소상공인 10초 릴스 기획 챗봇</h1>
+                    <p class="text-emerald-100 text-sm mt-1">버튼 클릭 및 품목별·월별 맞춤 특화 대본 출력 오류 완전 해결!</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Step 1: Input & Month/Season Selector -->
+        <main class="space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <span class="bg-emerald-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm">1</span>
+                        내 농장 정보 & 촬영 시기 선택
+                    </h2>
+                    <span class="text-xs text-slate-500">품목 버튼을 누르면 즉시 맞춤 세팅됩니다</span>
+                </div>
+
+                <!-- Crop Presets -->
+                <div class="flex flex-wrap gap-2 mb-6" id="presetButtons">
+                    <button type="button" onclick="setPreset('블루베리', this)" class="preset-btn px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-xl transition shadow-sm">🫐 블루베리·딸기</button>
+                    <button type="button" onclick="setPreset('쌀', this)" class="preset-btn px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-sm font-medium rounded-xl border border-emerald-200 transition">🌾 벼(수도작)·들깨</button>
+                    <button type="button" onclick="setPreset('밤호박', this)" class="preset-btn px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-sm font-medium rounded-xl border border-emerald-200 transition">🎃 밤호박·감자</button>
+                    <button type="button" onclick="setPreset('배추', this)" class="preset-btn px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-sm font-medium rounded-xl border border-emerald-200 transition">🥬 배추·절임배추</button>
+                    <button type="button" onclick="setPreset('곶감', this)" class="preset-btn px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-sm font-medium rounded-xl border border-emerald-200 transition">🍊 곶감·단감</button>
+                    <button type="button" onclick="setPreset('조경수', this)" class="preset-btn px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-sm font-medium rounded-xl border border-emerald-200 transition">🌲 조경수·묘목</button>
+                    <button type="button" onclick="setPreset('한우', this)" class="preset-btn px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-sm font-medium rounded-xl border border-emerald-200 transition">🐄 축사·한우</button>
+                </div>
+
+                <!-- Basic Info Fields -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">① 지역</label>
+                        <input type="text" id="regionInput" value="충북 증평" class="w-full px-3 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">② 재배 작물 / 업종</label>
+                        <input type="text" id="cropInput" value="블루베리 농장" class="w-full px-3 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">③ 경력 (년)</label>
+                        <input type="text" id="careerInput" value="15년" class="w-full px-3 py-2 border rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Month & Season Selector -->
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-6">
+                    <label class="block text-xs font-bold text-slate-700 mb-2">🗓️ 촬영 기준 월 및 농장 시즌 선택</label>
+                    <div class="flex flex-wrap gap-1.5 mb-3" id="monthButtons"></div>
+                    <div class="flex flex-wrap gap-2">
+                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-xl text-xs font-medium cursor-pointer hover:bg-slate-100">
+                            <input type="radio" name="seasonMode" value="peak" checked class="text-emerald-600"> 🔥 극성수기 (수확·판매 중)
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-xl text-xs font-medium cursor-pointer hover:bg-slate-100">
+                            <input type="radio" name="seasonMode" value="pre" class="text-emerald-600"> ⏳ 수확임박·사전예약기
+                        </label>
+                        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border rounded-xl text-xs font-medium cursor-pointer hover:bg-slate-100">
+                            <input type="radio" name="seasonMode" value="off" class="text-emerald-600"> 🌱 비수기·생육/밭준비기
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Customer 4 Cards -->
+                <div class="space-y-4">
+                    <label class="block text-sm font-bold text-slate-800">👤 [고객 한 명 카드 4칸] 내 농산물을 사줄 단 한 명의 진짜 손님</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
+                            <span class="text-xs font-bold text-amber-800 block mb-1">칸 1. 내 고객은 누구인가?</span>
+                            <input type="text" id="card1" value="초등학생 아이 둘을 키우는 40대 주부" class="w-full bg-white px-3 py-1.5 border rounded-lg text-xs">
+                        </div>
+                        <div class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
+                            <span class="text-xs font-bold text-amber-800 block mb-1">칸 2. 어떤 고민이 있는가?</span>
+                            <input type="text" id="card2" value="마트 과일은 겉만 번지르르하고 속은 밍밍해서 실망함" class="w-full bg-white px-3 py-1.5 border rounded-lg text-xs">
+                        </div>
+                        <div class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
+                            <span class="text-xs font-bold text-amber-800 block mb-1">칸 3. 살 때 가장 걱정하는 것은?</span>
+                            <input type="text" id="card3" value="택배로 오다가 터져서 즙이 새어나오면 어쩌지?" class="w-full bg-white px-3 py-1.5 border rounded-lg text-xs">
+                        </div>
+                        <div class="p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
+                            <span class="text-xs font-bold text-amber-800 block mb-1">칸 4. 어떤 약속에 지갑을 여는가?</span>
+                            <input type="text" id="card4" value="공판장 가기 전 새벽에 딴 특대과 당일 발송, 터지면 100% 환불" class="w-full bg-white px-3 py-1.5 border rounded-lg text-xs">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button type="button" onclick="generateContent('10')" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-sm cursor-pointer">
+                        ✨ 핵심 10초 릴스 소재 10개 추천받기
+                    </button>
+                    <button type="button" onclick="generateContent('30')" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text
